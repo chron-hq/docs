@@ -1,0 +1,1240 @@
+openapi: 3.1.0
+x-stoplight:
+  id: kc0290c53u9gz
+info:
+  title: Chron API
+  version: 0.1.0
+  summary: The Chron API
+  description: Use this API to connect to the Chron API.
+  contact:
+    name: Chron
+    url: 'https://chronhq.com'
+    email: support@chronhq.com
+  termsOfService: chronhq.com/terms
+  license:
+    name: Chron Software License Agreement
+    url: 'https://chronhq.com/docs/license'
+tags:
+  - name: Schedule
+    description: A timetable outlining the timing and sequence of events or activities.
+  - name: Event
+    description: A specific occurrence at a particular time and place.
+  - name: Subscriber
+    description: A person subscribed to a schedule.
+servers:
+  - url: 'https://api.chronhq.com'
+components:
+  schemas:
+    api_errors:
+      description: 'Chron uses conventional HTTP response codes to indicate the success or failure of an API request. In general: Codes in the `2xx` range indicate success. Codes in the `4xx` range indicate an error that failed given the information provided. Codes in the `5xx` range indicate an error with Chron''s servers (these are rare).'
+      properties:
+        code:
+          description: 'For some errors that could be handled programmatically, a short string indicating the error code reported.'
+          maxLength: 5000
+          type: string
+        id:
+          description: Unique identifier for the object.
+          maxLength: 5000
+          type: string
+          x-stoplight:
+            id: a8h5haydiynbv
+        message:
+          description: 'A human-readable message providing more details about the error, meant to be displayable to your users.'
+          maxLength: 40000
+          type: string
+      title: APIErrors
+      type: object
+      x-stoplight:
+        id: gsu32yin8ama4
+    error:
+      description: An error response from the Chron API.
+      properties:
+        error:
+          $ref: '#/components/schemas/api_errors'
+      required:
+        - error
+      type: object
+      x-stoplight:
+        id: jtt6u59mr2tfu
+    event:
+      description: Events describe the specific events available to your customers. Events are programmed within `Schedules`.
+      properties:
+        active:
+          description: Whether the event is currently available for use.
+          type: boolean
+        created:
+          description: 'Time at which the object was created, in ISO 8601 format.'
+          format: date-time
+          type: string
+        description:
+          description: 'The event''s description, meant to be displayable to the customer. Use this field to optionally store a long form explanation of the event for your own rendering purposes.'
+          maxLength: 40000
+          nullable: true
+          type: string
+        end:
+          description: 'The end date and time of the event, in ISO 8601 format.'
+          format: date-time
+          type: string
+        id:
+          description: Unique identifier for the object.
+          maxLength: 5000
+          type: string
+          x-stoplight:
+            id: oia4g82s37wb9
+        location:
+          description: The intended physical or virtual place where the event will take place.
+          maxLength: 5000
+          type: string
+        name:
+          description: 'The event''s name, meant to be displayable to the customer.'
+          maxLength: 5000
+          type: string
+        object:
+          description: String representing the object's type. Objects of the same type share the same value.
+          enum:
+            - event
+          type: string
+        schedule:
+          anyOf:
+            - $ref: '#/components/schemas/schedule/properties/id'
+          description: The ID of the schedule this event is associated with.
+        start:
+          description: 'The start date and time of the event, in ISO 8601 format.'
+          format: date-time
+          type: string
+        updated:
+          description: 'Time at which the object was last updated, in ISO 8601 format.'
+          format: date-time
+          type: string
+        url:
+          description: A URL of a publicly-accessible webpage for this event.
+          maxLength: 2048
+          nullable: true
+          type: string
+      title: Event
+      type: object
+      x-stoplight:
+        id: jyyh0otq8s196
+    deleted_event:
+      description: ''
+      properties:
+        deleted:
+          description: Always true for a deleted object
+          enum:
+            - true
+          type: boolean
+        id:
+          description: Unique identifier for the object.
+          maxLength: 5000
+          type: string
+        object:
+          description: String representing the object's type. Objects of the same type share the same value.
+          enum:
+            - event
+          type: string
+      required:
+        - deleted
+        - id
+        - object
+      title: DeletedEvent
+      type: object
+      x-stoplight:
+        id: cvjo9ojnv9sfs
+    deleted_schedule:
+      description: ''
+      properties:
+        deleted:
+          description: Always true for a deleted object
+          enum:
+            - true
+          type: boolean
+        id:
+          description: Unique identifier for the object.
+          maxLength: 5000
+          type: string
+        object:
+          description: String representing the object's type. Objects of the same type share the same value.
+          enum:
+            - schedule
+          type: string
+      required:
+        - deleted
+        - id
+        - object
+      title: DeletedSchedule
+      type: object
+      x-stoplight:
+        id: zxfn651c0hlta
+    deleted_subscriber:
+      description: ''
+      properties:
+        deleted:
+          description: Always true for a deleted object
+          enum:
+            - true
+          type: boolean
+        id:
+          description: Unique identifier for the object.
+          maxLength: 5000
+          type: string
+        object:
+          description: String representing the object's type. Objects of the same type share the same value.
+          enum:
+            - subscriber
+          type: string
+      required:
+        - deleted
+        - id
+        - object
+      title: DeletedSubscriber
+      type: object
+      x-stoplight:
+        id: 5e7uxrnklza3p
+    schedule:
+      description: Schedules describe the specific calendars available to your customers. Schedules are populated with `Events`.
+      properties:
+        active:
+          description: Whether the schedule is currently available for use.
+          type: boolean
+        created:
+          description: 'Time at which the object was created, in ISO 8601 format.'
+          format: date-time
+          type: string
+        description:
+          description: 'The schedule''s description, meant to be displayable to the customer. Use this field to optionally store a long form explanation of the schedule for your own rendering purposes.'
+          maxLength: 5000
+          nullable: true
+          type: string
+        id:
+          description: Unique identifier for the object.
+          maxLength: 5000
+          type: string
+          x-stoplight:
+            id: sh7k576gxgabp
+        image:
+          description: 'An URL of an image for this schedule, meant to be displayable to the customer.'
+          maxLength: 5000
+          type: string
+        name:
+          description: 'The schedule''s name, meant to be displayable to the customer.'
+          maxLength: 5000
+          type: string
+        object:
+          description: String representing the object's type. Objects of the same type share the same value.
+          enum:
+            - schedule
+          type: string
+        updated:
+          description: 'Time at which the object was last updated, in ISO 8601 format.'
+          format: date-time
+          type: string
+        url:
+          description: A URL of a publicly-accessible webpage for this schedule.
+          maxLength: 2048
+          nullable: true
+          type: string
+      title: Schedule
+      type: object
+      x-stoplight:
+        id: it7ca3ush73qf
+    subscriber:
+      description: This is an object representing a person subscribed to a schedule.
+      properties:
+        active:
+          description: Whether the subscriber is currently available.
+          maxLength: 5000
+          type: boolean
+        created:
+          description: 'Time at which the object was created, in ISO 8601 format.'
+          format: date-time
+          type: string
+        email:
+          description: The subscriber's email address.
+          maxLength: 5000
+          type: string
+        first_name:
+          description: The subscriber's first name.
+          maxLength: 5000
+          type: string
+        id:
+          description: Unique identifier for the object.
+          maxLength: 5000
+          type: string
+          x-stoplight:
+            id: hsd628rnso30t
+        last_name:
+          description: The subscriber's last name.
+          maxLength: 5000
+          type: string
+        object:
+          description: String representing the object's type. Objects of the same type share the same value.
+          enum:
+            - subscriber
+          type: string
+        updated:
+          description: 'Time at which the object was last updated, in ISO 8601 format.'
+          format: date-time
+          type: string
+      title: Subscriber
+      type: object
+      x-stoplight:
+        id: borx9pld92724
+  securitySchemes:
+    basicAuth:
+      description: 'Basic HTTP authentication. Allowed headers-- Authorization: Basic <api_key> | Authorization: Basic <base64 hash of `api_key:`>'
+      scheme: basic
+      type: http
+    bearerAuth:
+      bearerFormat: auth-scheme
+      description: 'Bearer HTTP authentication. Allowed headers-- Authorization: Bearer <api_key>'
+      scheme: bearer
+      type: http
+paths:
+  /v1/schedules:
+    get:
+      description: 'Returns a list of your schedules. The schedules are returned sorted by creation date, with the most recently created schedules appearing first.'
+      operationId: GetSchedules
+      parameters:
+        - description: 'Only return schedules that are active or inactive (e.g., pass `false` to list all inactive schedules).'
+          in: query
+          name: active
+          required: false
+          schema:
+            default: true
+            type: boolean
+          style: form
+        - description: 'A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.'
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 10
+            type: integer
+          style: form
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                object: list
+                url: /v1/schedules
+                data:
+                  - id: CmrdZWG5MkGEn7K4gA1f9VGV2B
+                    active: true
+                    created: '2022-08-24T14:15:22Z'
+                    description: Netball is the biggest team sport in Australia
+                    image: 'https://netball.com.au/public/2023-08/0p7a9429.jpg'
+                    name: 2024 Australian Netball Championship
+                    updated: '2023-08-24T14:15:22Z'
+                    url: 'https://netball.com.au/anc/matchcentre'
+              schema:
+                description: ''
+                properties:
+                  data:
+                    description: Details about each object.
+                    items:
+                      $ref: '#/components/schemas/schedule'
+                    type: array
+                  object:
+                    description: String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+                    enum:
+                      - list
+                    type: string
+                  url:
+                    description: The URL where this list can be accessed.
+                    maxLength: 5000
+                    pattern: ^/v1/schedules
+                    type: string
+                required:
+                  - data
+                  - object
+                  - url
+                title: ScheduleList
+                type: object
+          description: Successful response.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      tags:
+        - Schedule
+      x-stoplight:
+        id: uj21omfyuz9dn
+    post:
+      description: Creates a new schedule object.
+      operationId: PostSchedules
+      requestBody:
+        content:
+          application/json:
+            example:
+              name: 2024 Australian Netball Championship
+              description: Netball is the biggest team sport in Australia
+              image: 'https://netball.com.au/public/2023-08/0p7a9429.jpg'
+              url: 'https://netball.com.au/anc/matchcentre'
+            schema:
+              additionalProperties: false
+              properties:
+                active:
+                  default: true
+                  description: Whether the schedule is currently available. Defaults to `true`.
+                  type: boolean
+                description:
+                  description: 'The schedule''s description, meant to be displayable to the customer. Use this field to optionally store a long form explanation of the schedule for your own rendering purposes.'
+                  maxLength: 40000
+                  type: string
+                image:
+                  description: 'An URL of an image for this schedule, meant to be displayable to the customer.'
+                  type: string
+                name:
+                  description: 'The schedule''s name, meant to be displayable to the customer.'
+                  maxLength: 5000
+                  type: string
+                url:
+                  description: A URL of a publicly-accessible webpage for this schedule.
+                  maxLength: 2048
+                  nullable: true
+                  type: string
+              required:
+                - name
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                id: CmrdZWG5MkGEn7K4gA1f9VGV2B
+                active: true
+                created: '2022-08-24T14:15:22Z'
+                description: Netball is the biggest team sport in Australia
+                image: 'https://netball.com.au/public/2023-08/0p7a9429.jpg'
+                name: 2024 Australian Netball Championship
+                object: schedule
+                updated: '2023-08-24T14:15:22Z'
+                url: 'https://netball.com.au/anc/matchcentre'
+              schema:
+                $ref: '#/components/schemas/schedule'
+          description: Successful response.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      tags:
+        - Schedule
+      x-stoplight:
+        id: a5uvzkh0um2om
+  '/v1/schedules/{id}':
+    delete:
+      description: Delete a schedule.
+      operationId: DeleteSchedulesId
+      parameters:
+        - in: path
+          description: The identifier of the schedule which will be deleted.
+          name: id
+          required: true
+          schema:
+            maxLength: 5000
+            type: string
+          style: simple
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                id: CmrdZWG5MkGEn7K4gA1f9VGV2B
+                deleted: true
+                object: schedule
+              schema:
+                $ref: '#/components/schemas/deleted_schedule'
+          description: Successful response.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      tags:
+        - Schedule
+      x-stoplight:
+        id: 02rhoirj462yj
+    get:
+      description: 'Retrieves the details of an existing schedule. Supply the unique schedule ID from either a schedule creation request or the schedule list, and Chron will return the corresponding schedule information.'
+      operationId: GetSchedulesId
+      parameters:
+        - in: path
+          description: The identifier of the schedule which will be returned.
+          name: id
+          required: true
+          schema:
+            maxLength: 5000
+            type: string
+          style: simple
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                id: CmrdZWG5MkGEn7K4gA1f9VGV2B
+                active: true
+                created: '2022-08-24T14:15:22Z'
+                description: Netball is the biggest team sport in Australia
+                image: 'https://netball.com.au/public/2023-08/0p7a9429.jpg'
+                name: 2024 Australian Netball Championship
+                object: schedule
+                updated: '2023-08-24T14:15:22Z'
+                url: 'https://netball.com.au/anc/matchcentre'
+              schema:
+                $ref: '#/components/schemas/schedule'
+          description: Successful response.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      tags:
+        - Schedule
+      x-stoplight:
+        id: zka6vop2rzgo0
+    post:
+      description: Updates the specific schedule by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+      operationId: PostSchedulesId
+      parameters:
+        - in: path
+          description: The identifier of the schedule which will be updated.
+          name: id
+          required: true
+          schema:
+            maxLength: 5000
+            type: string
+          style: simple
+      requestBody:
+        content:
+          application/json:
+            example:
+              name: 2024 Australian Netball Championship
+              description: Netball is the biggest team sport in Australia
+              image: 'https://netball.com.au/public/2023-08/0p7a9429.jpg'
+              url: 'https://netball.com.au/anc/matchcentre'
+            schema:
+              additionalProperties: false
+              properties:
+                active:
+                  description: Whether the schedule is currently available.
+                  type: boolean
+                description:
+                  description: 'The schedule''s description, meant to be displayable to the customer. Use this field to optionally store a long form explanation of the schedule for your own rendering purposes.'
+                  maxLength: 40000
+                  type: string
+                image:
+                  description: 'An URL of an image for this schedule, meant to be displayable to the customer.'
+                  type: string
+                name:
+                  description: 'The schedule''s name, meant to be displayable to the customer.'
+                  maxLength: 5000
+                  type: string
+                url:
+                  description: A URL of a publicly-accessible webpage for this schedule.
+                  maxLength: 2048
+                  type: string
+              type: object
+        required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                id: CmrdZWG5MkGEn7K4gA1f9VGV2B
+                active: true
+                created: '2022-08-24T14:15:22Z'
+                description: Netball is the biggest team sport in Australia
+                image: 'https://netball.com.au/public/2023-08/0p7a9429.jpg'
+                name: 2024 Australian Netball Championship
+                object: schedule
+                updated: '2023-08-24T14:15:22Z'
+                url: 'https://netball.com.au/anc/matchcentre'
+              schema:
+                $ref: '#/components/schemas/schedule'
+          description: Successful response.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      tags:
+        - Schedule
+      x-stoplight:
+        id: 7sgu6d13nvlsg
+  '/v1/schedules/{id}/subscribers':
+    get:
+      description: 'Returns a list of a schedule''s subscribers. The subscribers are returned sorted by created date, with the most recently created subscribers appearing first.'
+      operationId: GetSchedulesSubscribers
+      parameters:
+        - in: path
+          description: The identifier of the schedule.
+          name: id
+          required: true
+          schema:
+            maxLength: 5000
+            type: string
+          style: simple
+        - description: 'Only return subscribers that are active or inactive (e.g., pass `false` to list all inactive subscribers).'
+          in: query
+          name: active
+          required: false
+          schema:
+            default: true
+            type: boolean
+          style: form
+        - description: 'A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.'
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 10
+            type: integer
+          style: form
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                object: list
+                url: /v1/schedules/aa3kD9wsUB5LtLlpOLMzWKpvtd/subscribers
+                data:
+                  - id: fI7AqBtWI4H44p9GlJ5uz0R0Xe
+                    active: true
+                    created: '2022-08-24T14:15:22Z'
+                    email: o.pitterson@example.com
+                    first_name: oberon
+                    last_name: pitterson
+                    object: subscriber
+                    updated: '2023-08-24T14:15:22Z'
+              schema:
+                description: ''
+                properties:
+                  data:
+                    description: Details about each object.
+                    items:
+                      $ref: '#/components/schemas/subscriber'
+                    type: array
+                  object:
+                    description: String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+                    enum:
+                      - list
+                    type: string
+                required:
+                  - data
+                  - object
+                  - url
+                title: ScheduleSubscriberList
+                type: object
+          description: Successful response.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      tags:
+        - Schedule
+      x-stoplight:
+        id: fphinkomiea90
+  /v1/events:
+    get:
+      description: 'Returns a list of your events. The events are returned sorted by creation date, with the most recently created events appearing first.'
+      operationId: GetEvents
+      parameters:
+        - description: 'Only return events that are active or inactive (e.g., pass `false` to list all inactive events).'
+          in: query
+          name: active
+          required: false
+          schema:
+            default: true
+            type: boolean
+          style: form
+        - description: 'A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.'
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 10
+            type: integer
+          style: form
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                object: list
+                url: /v1/events
+                data:
+                  - id: om6kxwlbB91pPZrhIwaNTusXjT
+                    active: true
+                    created: '2022-08-24T14:15:22Z'
+                    description: Can the Wild tame the Victorians at home?
+                    end: '2023-10-31T17:30:00'
+                    location: 'Blundstone Arena\n15 Derwent St\, Bellerive TAS 7018\, Australia'
+                    name: Tasmania Wild vs Victorian Fury
+                    object: event
+                    schedule: 26tbz5q3syTZK2zDBGwboz7AiA
+                    start: '2023-10-31T15:00:00'
+                    updated: '2023-08-24T14:15:22Z'
+                    url: 'https://netball.com.au/anc/matchcentre/tas-wild-vic-fury'
+              schema:
+                description: ''
+                properties:
+                  data:
+                    description: Details about each object.
+                    items:
+                      $ref: '#/components/schemas/event'
+                    type: array
+                  object:
+                    description: String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+                    enum:
+                      - list
+                    type: string
+                  url:
+                    description: The URL where this list can be accessed.
+                    maxLength: 5000
+                    pattern: ^/v1/events
+                    type: string
+                required:
+                  - data
+                  - object
+                  - url
+                title: EventList
+                type: object
+          description: Successful response.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      tags:
+        - Event
+      x-stoplight:
+        id: x96yi0nktqw5q
+    post:
+      description: Creates a new event object.
+      operationId: PostEvents
+      requestBody:
+        content:
+          application/json:
+            example:
+              name: Tasmania Wild vs Victorian Fury
+              description: Can the Wild tame the Victorians at home?
+              location: 'Blundstone Arena\n15 Derwent St\, Bellerive TAS 7018\, Australia'
+              schedule: 26tbz5q3syTZK2zDBGwboz7AiA
+              start: '2023-10-31T15:00:00'
+              url: 'https://netball.com.au/anc/matchcentre/tas-wild-vic-fury'
+            schema:
+              additionalProperties: false
+              properties:
+                active:
+                  default: true
+                  description: Whether the event is currently available. Defaults to `true`.
+                  type: boolean
+                description:
+                  description: 'The event''s description, meant to be displayable to the customer. Use this field to optionally store a long form explanation of the event for your own rendering purposes.'
+                  maxLength: 40000
+                  type: string
+                end:
+                  description: 'The end date and time of the event, in ISO 8601 format.'
+                  format: date-time
+                  type: string
+                location:
+                  description: The intended physical or virtual place where the event will take place.
+                  maxLength: 5000
+                  type: string
+                name:
+                  description: 'The event''s name, meant to be displayable to the customer.'
+                  maxLength: 5000
+                  type: string
+                start:
+                  description: 'The start date and time of the event, in ISO 8601 format.'
+                  format: date-time
+                  type: string
+                schedule:
+                  anyOf:
+                    - $ref: '#/components/schemas/schedule/properties/id'
+                  description: The ID of the schedule this event is associated with.
+                url:
+                  description: A URL of a publicly-accessible webpage for this event.
+                  maxLength: 2048
+                  nullable: true
+                  type: string
+              required:
+                - name
+                - schedule
+                - start
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                id: om6kxwlbB91pPZrhIwaNTusXjT
+                active: true
+                created: '2022-08-24T14:15:22Z'
+                description: Can the Wild tame the Victorians at home?
+                end: '2023-10-31T17:30:00'
+                location: 'Blundstone Arena\n15 Derwent St\, Bellerive TAS 7018\, Australia'
+                name: Tasmania Wild vs Victorian Fury
+                object: event
+                schedule: 26tbz5q3syTZK2zDBGwboz7AiA
+                start: '2023-10-31T15:00:00'
+                updated: '2023-08-24T14:15:22Z'
+                url: 'https://netball.com.au/anc/matchcentre/tas-wild-vic-fury'
+              schema:
+                $ref: '#/components/schemas/event'
+          description: Successful response.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      tags:
+        - Event
+      x-stoplight:
+        id: r9jcsjuj2i8cn
+  '/v1/events/{id}':
+    delete:
+      description: Delete an event.
+      operationId: DeleteEventsId
+      parameters:
+        - in: path
+          description: The identifier of the event which will be deleted.
+          name: id
+          required: true
+          schema:
+            maxLength: 5000
+            type: string
+          style: simple
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                id: CmrdZWG5MkGEn7K4gA1f9VGV2B
+                deleted: true
+                object: event
+              schema:
+                $ref: '#/components/schemas/deleted_event'
+          description: Successful response.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      tags:
+        - Event
+      x-stoplight:
+        id: rdvza8mxzz4eo
+    get:
+      description: 'Retrieves the details of an existing event. Supply the unique event ID from either an event creation request or the event list, and Chron will return the corresponding event information.'
+      operationId: GetEventsId
+      parameters:
+        - in: path
+          description: The identifier of the event which will be returned.
+          name: id
+          required: true
+          schema:
+            maxLength: 5000
+            type: string
+          style: simple
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                id: om6kxwlbB91pPZrhIwaNTusXjT
+                active: true
+                created: '2022-08-24T14:15:22Z'
+                description: Can the Wild tame the Victorians at home
+                end: '2023-10-31T17:30:00'
+                location: 'Blundstone Arena\\n15 Derwent St\\, Bellerive TAS 7018\\, Australia'
+                name: Tasmania Wild vs Victorian Fury
+                object: event
+                schedule: 26tbz5q3syTZK2zDBGwboz7AiA
+                start: '2023-10-31T15:00:00'
+                updated: '2023-08-24T14:15:22Z'
+                url: 'https://netball.com.au/anc/matchcentre/tas-wild-vic-fury'
+              schema:
+                $ref: '#/components/schemas/event'
+          description: Successful response.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      tags:
+        - Event
+      x-stoplight:
+        id: zv5v0zaz7ekau
+    post:
+      description: Updates the specific event by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+      operationId: PostEventsId
+      parameters:
+        - in: path
+          description: The identifier of the event which will be updated.
+          name: id
+          required: true
+          schema:
+            maxLength: 5000
+            type: string
+          style: simple
+      requestBody:
+        content:
+          application/json:
+            example:
+              name: Tasmania Wild vs Victorian Fury
+              description: Can the Wild tame the Victorians at home?
+              location: 'Blundstone Arena\n15 Derwent St\, Bellerive TAS 7018\, Australia'
+              schedule: 26tbz5q3syTZK2zDBGwboz7AiA
+              start: '2023-10-31T15:00:00'
+              url: 'https://netball.com.au/anc/matchcentre/tas-wild-vic-fury'
+            schema:
+              additionalProperties: false
+              properties:
+                active:
+                  description: Whether the event is currently available.
+                  type: boolean
+                description:
+                  description: 'The event''s description, meant to be displayable to the customer. Use this field to optionally store a long form explanation of the event for your own rendering purposes.'
+                  maxLength: 40000
+                  type: string
+                end:
+                  description: 'The end date and time of the event, in ISO 8601 format.'
+                  format: date-time
+                  type: string
+                location:
+                  description: The intended physical or virtual place where the event will take place.
+                  maxLength: 5000
+                  type: string
+                name:
+                  description: 'The event''s name, meant to be displayable to the customer.'
+                  maxLength: 5000
+                  type: string
+                start:
+                  description: 'The start date and time of the event, in ISO 8601 format.'
+                  format: date-time
+                  type: string
+                schedule:
+                  anyOf:
+                    - $ref: '#/components/schemas/schedule/properties/id'
+                  description: The ID of the schedule this event is associated with.
+                url:
+                  description: A URL of a publicly-accessible webpage for this event.
+                  maxLength: 2048
+                  nullable: true
+                  type: string
+              required:
+                - name
+              type: object
+        required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                id: om6kxwlbB91pPZrhIwaNTusXjT
+                active: true
+                created: '2022-08-24T14:15:22Z'
+                description: Can the Wild tame the Victorians at home
+                end: '2023-10-31T17:30:00'
+                location: 'Blundstone Arena\\n15 Derwent St\\, Bellerive TAS 7018\\, Australia'
+                name: Tasmania Wild vs Victorian Fury
+                object: event
+                schedule: 26tbz5q3syTZK2zDBGwboz7AiA
+                start: '2023-10-31T15:00:00'
+                updated: '2023-08-24T14:15:22Z'
+                url: 'https://netball.com.au/anc/matchcentre/tas-wild-vic-fury'
+              schema:
+                $ref: '#/components/schemas/event'
+          description: Successful response.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      tags:
+        - Event
+      x-stoplight:
+        id: s5dkmo0y0yb7h
+  /v1/subscribers:
+    get:
+      description: 'Returns a list of your subscribers. The subscribers are returned sorted by creation date, with the most recently created subscribers appearing first.'
+      operationId: GetSubscribers
+      parameters:
+        - description: 'Only return subscribers that are active or inactive (e.g., pass `false` to list all inactive subscribers).'
+          in: query
+          name: active
+          required: false
+          schema:
+            default: true
+            type: boolean
+          style: form
+        - description: 'A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.'
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 10
+            type: integer
+          style: form
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                object: list
+                url: /v1/subscribers
+                data:
+                  - id: fI7AqBtWI4H44p9GlJ5uz0R0Xe
+                    active: true
+                    created: '2022-08-24T14:15:22Z'
+                    email: o.pitterson@example.com
+                    first_name: oberon
+                    last_name: pitterson
+                    object: subscriber
+                    updated: '2023-08-24T14:15:22Z'
+              schema:
+                description: ''
+                properties:
+                  data:
+                    description: Details about each object.
+                    items:
+                      $ref: '#/components/schemas/subscriber'
+                    type: array
+                  object:
+                    description: String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
+                    enum:
+                      - list
+                    type: string
+                  url:
+                    description: The URL where this list can be accessed.
+                    maxLength: 5000
+                    pattern: ^/v1/subscribers
+                    type: string
+                required:
+                  - data
+                  - object
+                  - url
+                title: SubscriberList
+                type: object
+          description: Successful response.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      tags:
+        - Subscriber
+      x-stoplight:
+        id: h8xbsumnlstw1
+    post:
+      description: Creates a new subscriber object.
+      operationId: PostSubscribers
+      requestBody:
+        content:
+          application/json:
+            example:
+              email: o.pitterson@example.com
+              first_name: oberon
+              last_name: pitterson
+            schema:
+              additionalProperties: false
+              properties:
+                active:
+                  default: true
+                  description: Whether the subscriber is currently available. Defaults to `true`.
+                  type: boolean
+                email:
+                  description: The subscriber's email address.
+                  maxLength: 5000
+                  type: string
+                first_name:
+                  description: The subscriber's first name.
+                  maxLength: 5000
+                  type: string
+                last_name:
+                  description: The subscriber's last name.
+                  maxLength: 5000
+                  type: string
+              required:
+                - email
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                id: fI7AqBtWI4H44p9GlJ5uz0R0Xe
+                active: true
+                created: '2022-08-24T14:15:22Z'
+                email: o.pitterson@example.com
+                first_name: oberon
+                last_name: pitterson
+                object: subscriber
+                updated: '2023-08-24T14:15:22Z'
+              schema:
+                $ref: '#/components/schemas/subscriber'
+          description: Successful response.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      tags:
+        - Subscriber
+      x-stoplight:
+        id: o0mfrh1zxv3tb
+  '/v1/subscribers/{id}':
+    delete:
+      description: Delete a subscriber.
+      operationId: DeleteSubscribersId
+      parameters:
+        - in: path
+          description: The identifier of the subscriber which will be deleted.
+          name: id
+          required: true
+          schema:
+            maxLength: 5000
+            type: string
+          style: simple
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                id: 2t5rlI5ecmSe96tkS4yCBHsBdD
+                deleted: true
+                object: subscriber
+              schema:
+                $ref: '#/components/schemas/deleted_subscriber'
+          description: Successful response.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      tags:
+        - Subscriber
+      x-stoplight:
+        id: bqvk3axphgsyi
+    get:
+      description: 'Retrieves the details of an existing subscriber. Supply the unique subscriber ID from either a subscriber creation request or the subscriber list, and Chron will return the corresponding subscriber information.'
+      operationId: GetSubscribersId
+      parameters:
+        - in: path
+          description: The identifier of the subscriber which will be returned.
+          name: id
+          required: true
+          schema:
+            maxLength: 5000
+            type: string
+          style: simple
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                id: fI7AqBtWI4H44p9GlJ5uz0R0Xe
+                active: true
+                created: '2022-08-24T14:15:22Z'
+                email: o.pitterson@example.com
+                first_name: oberon
+                last_name: pitterson
+                object: subscriber
+                updated: '2023-08-24T14:15:22Z'
+              schema:
+                $ref: '#/components/schemas/subscriber'
+          description: Successful response.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      tags:
+        - Subscriber
+      x-stoplight:
+        id: zpxci8nyxuqpd
+    post:
+      description: Updates the specific subscriber by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+      operationId: PostSubscribersId
+      parameters:
+        - in: path
+          description: The identifier of the subscriber which will be updated.
+          name: id
+          required: true
+          schema:
+            maxLength: 5000
+            type: string
+          style: simple
+      requestBody:
+        content:
+          application/json:
+            example:
+              email: o.pitterson@example.com
+              first_name: oberon
+              last_name: pitterson
+            schema:
+              additionalProperties: false
+              properties:
+                active:
+                  description: Whether the subscriber is currently available.
+                  type: boolean
+                email:
+                  description: The subscriber's email address.
+                  type: string
+                first_name:
+                  description: The subscriber's first name.
+                  type: string
+                last_name:
+                  description: The subscriber's last name.
+                  type: string
+              type: object
+        required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                id: fI7AqBtWI4H44p9GlJ5uz0R0Xe
+                active: true
+                created: '2022-08-24T14:15:22Z'
+                email: o.pitterson@example.com
+                first_name: oberon
+                last_name: pitterson
+                object: subscriber
+                updated: '2023-08-24T14:15:22Z'
+              schema:
+                $ref: '#/components/schemas/subscriber'
+          description: Successful response.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+          description: Error response.
+      tags:
+        - Subscriber
+      x-stoplight:
+        id: h3fl4bauzf6y1

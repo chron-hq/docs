@@ -1,0 +1,40 @@
+---
+title: API Overview
+description: Connect to Chron
+stoplight-id: tj9b1qtc1d6wd
+---
+
+The Chron API is organized around [REST](http://en.wikipedia.org/wiki/Representational_State_Transfer). Our API has predictable resource-oriented URLs, accepts [JSON-encoded](https://www.json.org/json-en.html) request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.
+
+The Chron API doesn't support bulk updates. You can work on only one object per request.
+
+## Errors
+
+Chron uses conventional HTTP response codes to indicate the success or failure of an API request. In general: Codes in the `2xx` range indicate success. Codes in the `4xx` range indicate an error that failed given the information provided (e.g., a required parameter was omitted, etc.). Codes in the `5xx` range indicate an error with Chron's servers (these are rare).
+
+Some `4xx` errors that could be handled programmatically (e.g., a particular parameter is missing) include an error code that briefly explains the error reported.
+
+## Request IDs
+
+Each API request has an associated request identifier. You can find this value in the response headers, under `Request-Id`. You can also find request identifiers in the URLs of individual request logs in your Dashboard. **If you need to contact us about a specific request, providing the request identifier will ensure the fastest possible resolution**.
+
+## Rate limits
+
+The Chron API uses a number of safeguards against bursts of incoming traffic to help maximise its stability. Users who send many requests in quick succession might see error responses that show up as status code `429`. We have several limiters in the API, including:
+
+- A rate limiter that limits the number of requests received by the API within any given second. For most APIs, Chron allows up to 100 read operations per second and 100 write operations per second.
+- A concurrency limiter that limits the number of requests that are active at any given time. Problems with this limiter are less common compared to the request rate limiter, but it’s more likely to result in resource-intensive, long-lived requests.
+
+Treat these limits as maximums and don’t generate unnecessary load. If you suddenly see a rising number of rate limited requests, please contact support.
+
+We may reduce limits to prevent abuse, or increase limits to enable high-traffic applications. To request an increased rate limit, please contact support. If you’re requesting a large increase, contact us 6 weeks in advance of when you’ll need the increased rate limit.
+
+## Versioning
+
+When backwards-incompatible changes are made to the API, a new, dated version is released. The current version is `2023-08-16`. Read our API upgrades guide to learn more about backwards compatibility. For all API updates, view our API changelog.
+
+All requests use your account API settings, unless you override the API version. The upgrades guide lists every available version. _Note that by default webhook events are structured according to your account API version, unless you set an API version during endpoint creation_.
+
+To set the API version on a specific request, send a `Chron-Version` header.
+
+You can visit your Dashboard to upgrade your API version. As a precaution, use API versioning to test a new API version before committing to an upgrade.

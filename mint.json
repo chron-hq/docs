@@ -1,9 +1,22 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Starter Kit",
+  "name": "Chron",
+  "openapi": "./chron-api.yaml",
+  "api": {
+    "baseUrl": "https://api.chronhq.com",
+    "auth": {
+      "method": "bearer"
+    }
+  },
+  "analytics": {
+    "ga4": {
+      "measurementId": "G-C1196JXMR8"
+    }
+  },
   "logo": {
     "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg"
+    "light": "/logo/light.svg",
+    "href": "https://chronhq.com"
   },
   "favicon": "/favicon.png",
   "colors": {
@@ -21,12 +34,12 @@
   "topbarLinks": [
     {
       "name": "Support",
-      "url": "mailto:hi@mintlify.com"
+      "url": "mailto:hi@chronhq.com"
     }
   ],
   "topbarCtaButton": {
     "name": "Dashboard",
-    "url": "https://dashboard.mintlify.com"
+    "url": "https://dashboard.chronhq.com"
   },
   "tabs": [
     {
@@ -38,39 +51,70 @@
     {
       "name": "Documentation",
       "icon": "book-open-cover",
-      "url": "https://mintlify.com/docs"
+      "url": "https://docs.chronhq.com"
     },
     {
-      "name": "Community",
-      "icon": "slack",
-      "url": "https://mintlify.com/community"
+      "name": "API Reference",
+      "icon": "square-terminal",
+      "url": "api-reference"
     },
     {
       "name": "Blog",
       "icon": "newspaper",
-      "url": "https://mintlify.com/blog"
+      "url": "https://chronhq.com/blog"
     }
   ],
   "navigation": [
     {
-      "group": "Get Started",
+      "group": "Getting Started",
       "pages": ["introduction", "quickstart", "development"]
     },
     {
       "group": "Essentials",
-      "pages": ["essentials/markdown", "essentials/code", "essentials/images", "essentials/settings", "essentials/navigation"]
+      "pages": [
+        "essentials/markdown",
+        "essentials/code",
+        "essentials/images",
+        "essentials/settings",
+        "essentials/navigation"
+      ]
     },
     {
       "group": "API Documentation",
-      "pages": ["api-reference/authentication"]
+      "pages": ["api-reference/overview", "api-reference/authentication"]
     },
     {
-      "group": "Endpoint Examples",
+      "group": "Schedules",
       "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/update",
-        "api-reference/endpoint/delete"
+        "api-reference/schedules/schedules",
+        "api-reference/schedules/list-schedules",
+        "api-reference/schedules/create-schedule",
+        "api-reference/schedules/delete-schedule",
+        "api-reference/schedules/get-schedule",
+        "api-reference/schedules/update-schedule",
+        "api-reference/schedules/get-schedule-subscribers"
+      ]
+    },
+    {
+      "group": "Events",
+      "pages": [
+        "api-reference/events/events",
+        "api-reference/events/list-events",
+        "api-reference/events/create-event",
+        "api-reference/events/delete-event",
+        "api-reference/events/get-event",
+        "api-reference/events/update-event"
+      ]
+    },
+    {
+      "group": "Subscribers",
+      "pages": [
+        "api-reference/subscribers/subscribers",
+        "api-reference/subscribers/list-subscribers",
+        "api-reference/subscribers/create-subscriber",
+        "api-reference/subscribers/delete-subscriber",
+        "api-reference/subscribers/get-subscriber",
+        "api-reference/subscribers/update-subscriber"
       ]
     }
   ],
