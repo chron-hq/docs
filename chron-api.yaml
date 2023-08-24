@@ -1,6 +1,4 @@
 openapi: 3.1.0
-x-stoplight:
-  id: kc0290c53u9gz
 info:
   title: Chron API
   version: 0.1.0
@@ -28,24 +26,12 @@ components:
     api_errors:
       description: 'Chron uses conventional HTTP response codes to indicate the success or failure of an API request. In general: Codes in the `2xx` range indicate success. Codes in the `4xx` range indicate an error that failed given the information provided. Codes in the `5xx` range indicate an error with Chron''s servers (these are rare).'
       properties:
-        code:
-          description: 'For some errors that could be handled programmatically, a short string indicating the error code reported.'
-          maxLength: 5000
-          type: string
-        id:
-          description: Unique identifier for the object.
-          maxLength: 5000
-          type: string
-          x-stoplight:
-            id: a8h5haydiynbv
         message:
           description: 'A human-readable message providing more details about the error, meant to be displayable to your users.'
           maxLength: 40000
           type: string
       title: APIErrors
       type: object
-      x-stoplight:
-        id: gsu32yin8ama4
     error:
       description: An error response from the Chron API.
       properties:
@@ -54,8 +40,6 @@ components:
       required:
         - error
       type: object
-      x-stoplight:
-        id: jtt6u59mr2tfu
     event:
       description: Events describe the specific events available to your customers. Events are programmed within `Schedules`.
       properties:
@@ -79,8 +63,6 @@ components:
           description: Unique identifier for the object.
           maxLength: 5000
           type: string
-          x-stoplight:
-            id: oia4g82s37wb9
         location:
           description: The intended physical or virtual place where the event will take place.
           maxLength: 5000
@@ -113,8 +95,6 @@ components:
           type: string
       title: Event
       type: object
-      x-stoplight:
-        id: jyyh0otq8s196
     deleted_event:
       description: ''
       properties:
@@ -138,8 +118,6 @@ components:
         - object
       title: DeletedEvent
       type: object
-      x-stoplight:
-        id: cvjo9ojnv9sfs
     deleted_schedule:
       description: ''
       properties:
@@ -163,8 +141,6 @@ components:
         - object
       title: DeletedSchedule
       type: object
-      x-stoplight:
-        id: zxfn651c0hlta
     deleted_subscriber:
       description: ''
       properties:
@@ -188,8 +164,6 @@ components:
         - object
       title: DeletedSubscriber
       type: object
-      x-stoplight:
-        id: 5e7uxrnklza3p
     schedule:
       description: Schedules describe the specific calendars available to your customers. Schedules are populated with `Events`.
       properties:
@@ -209,8 +183,6 @@ components:
           description: Unique identifier for the object.
           maxLength: 5000
           type: string
-          x-stoplight:
-            id: sh7k576gxgabp
         image:
           description: 'An URL of an image for this schedule, meant to be displayable to the customer.'
           maxLength: 5000
@@ -235,8 +207,6 @@ components:
           type: string
       title: Schedule
       type: object
-      x-stoplight:
-        id: it7ca3ush73qf
     subscriber:
       description: This is an object representing a person subscribed to a schedule.
       properties:
@@ -260,8 +230,6 @@ components:
           description: Unique identifier for the object.
           maxLength: 5000
           type: string
-          x-stoplight:
-            id: hsd628rnso30t
         last_name:
           description: The subscriber's last name.
           maxLength: 5000
@@ -277,8 +245,6 @@ components:
           type: string
       title: Subscriber
       type: object
-      x-stoplight:
-        id: borx9pld92724
   securitySchemes:
     basicAuth:
       description: 'Basic HTTP authentication. Allowed headers-- Authorization: Basic <api_key> | Authorization: Basic <base64 hash of `api_key:`>'
@@ -360,8 +326,6 @@ paths:
           description: Error response.
       tags:
         - Schedule
-      x-stoplight:
-        id: uj21omfyuz9dn
     post:
       description: Creates a new schedule object.
       operationId: PostSchedules
@@ -425,8 +389,6 @@ paths:
           description: Error response.
       tags:
         - Schedule
-      x-stoplight:
-        id: a5uvzkh0um2om
   '/v1/schedules/{id}':
     delete:
       description: Delete a schedule.
@@ -459,8 +421,6 @@ paths:
           description: Error response.
       tags:
         - Schedule
-      x-stoplight:
-        id: 02rhoirj462yj
     get:
       description: 'Retrieves the details of an existing schedule. Supply the unique schedule ID from either a schedule creation request or the schedule list, and Chron will return the corresponding schedule information.'
       operationId: GetSchedulesId
@@ -498,8 +458,6 @@ paths:
           description: Error response.
       tags:
         - Schedule
-      x-stoplight:
-        id: zka6vop2rzgo0
     post:
       description: Updates the specific schedule by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
       operationId: PostSchedulesId
@@ -568,8 +526,6 @@ paths:
           description: Error response.
       tags:
         - Schedule
-      x-stoplight:
-        id: 7sgu6d13nvlsg
   '/v1/schedules/{id}/subscribers':
     get:
       description: 'Returns a list of a schedule''s subscribers. The subscribers are returned sorted by created date, with the most recently created subscribers appearing first.'
@@ -643,8 +599,6 @@ paths:
           description: Error response.
       tags:
         - Schedule
-      x-stoplight:
-        id: fphinkomiea90
   /v1/events:
     get:
       description: 'Returns a list of your events. The events are returned sorted by creation date, with the most recently created events appearing first.'
@@ -719,8 +673,6 @@ paths:
           description: Error response.
       tags:
         - Event
-      x-stoplight:
-        id: x96yi0nktqw5q
     post:
       description: Creates a new event object.
       operationId: PostEvents
@@ -804,8 +756,6 @@ paths:
           description: Error response.
       tags:
         - Event
-      x-stoplight:
-        id: r9jcsjuj2i8cn
   '/v1/events/{id}':
     delete:
       description: Delete an event.
@@ -838,8 +788,6 @@ paths:
           description: Error response.
       tags:
         - Event
-      x-stoplight:
-        id: rdvza8mxzz4eo
     get:
       description: 'Retrieves the details of an existing event. Supply the unique event ID from either an event creation request or the event list, and Chron will return the corresponding event information.'
       operationId: GetEventsId
@@ -880,8 +828,6 @@ paths:
           description: Error response.
       tags:
         - Event
-      x-stoplight:
-        id: zv5v0zaz7ekau
     post:
       description: Updates the specific event by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
       operationId: PostEventsId
@@ -971,8 +917,6 @@ paths:
           description: Error response.
       tags:
         - Event
-      x-stoplight:
-        id: s5dkmo0y0yb7h
   /v1/subscribers:
     get:
       description: 'Returns a list of your subscribers. The subscribers are returned sorted by creation date, with the most recently created subscribers appearing first.'
@@ -1043,8 +987,6 @@ paths:
           description: Error response.
       tags:
         - Subscriber
-      x-stoplight:
-        id: h8xbsumnlstw1
     post:
       description: Creates a new subscriber object.
       operationId: PostSubscribers
@@ -1102,8 +1044,6 @@ paths:
           description: Error response.
       tags:
         - Subscriber
-      x-stoplight:
-        id: o0mfrh1zxv3tb
   '/v1/subscribers/{id}':
     delete:
       description: Delete a subscriber.
@@ -1136,8 +1076,6 @@ paths:
           description: Error response.
       tags:
         - Subscriber
-      x-stoplight:
-        id: bqvk3axphgsyi
     get:
       description: 'Retrieves the details of an existing subscriber. Supply the unique subscriber ID from either a subscriber creation request or the subscriber list, and Chron will return the corresponding subscriber information.'
       operationId: GetSubscribersId
@@ -1174,8 +1112,6 @@ paths:
           description: Error response.
       tags:
         - Subscriber
-      x-stoplight:
-        id: zpxci8nyxuqpd
     post:
       description: Updates the specific subscriber by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
       operationId: PostSubscribersId
@@ -1236,5 +1172,3 @@ paths:
           description: Error response.
       tags:
         - Subscriber
-      x-stoplight:
-        id: h3fl4bauzf6y1
