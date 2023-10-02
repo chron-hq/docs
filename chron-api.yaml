@@ -13,12 +13,12 @@ info:
     name: Chron Software License Agreement
     url: 'https://chronhq.com/docs/license'
 tags:
-  - name: Schedule
+  - name: Calendar
     description: A timetable outlining the timing and sequence of events or activities.
   - name: Event
     description: A specific occurrence at a particular time and place.
   - name: Subscriber
-    description: A person subscribed to a schedule.
+    description: A person subscribed to a calendar.
 servers:
   - url: 'https://api.chronhq.com'
 components:
@@ -30,6 +30,8 @@ components:
           description: 'A human-readable message providing more details about the error, meant to be displayable to your users.'
           maxLength: 40000
           type: string
+      required:
+        - message
       title: APIErrors
       type: object
     error:
@@ -41,7 +43,7 @@ components:
         - error
       type: object
     event:
-      description: Events describe the specific events available to your customers. Events are programmed within `Schedules`.
+      description: Events describe the specific events available to your customers. Events are programmed within `Calendars`.
       properties:
         active:
           description: Whether the event is currently available for use.
@@ -76,10 +78,10 @@ components:
           enum:
             - event
           type: string
-        schedule:
+        calendar:
           anyOf:
-            - $ref: '#/components/schemas/schedule/properties/id'
-          description: The ID of the schedule this event is associated with.
+            - $ref: '#/components/schemas/calendar/properties/id'
+          description: The ID of the calendar this event is associated with.
         start:
           description: 'The start date and time of the event, in ISO 8601 format.'
           format: date-time
@@ -118,7 +120,7 @@ components:
         - object
       title: DeletedEvent
       type: object
-    deleted_schedule:
+    deleted_calendar:
       description: ''
       properties:
         deleted:
@@ -133,13 +135,13 @@ components:
         object:
           description: String representing the object's type. Objects of the same type share the same value.
           enum:
-            - schedule
+            - calendar
           type: string
       required:
         - deleted
         - id
         - object
-      title: DeletedSchedule
+      title: DeletedCalendar
       type: object
     deleted_subscriber:
       description: ''
@@ -164,18 +166,18 @@ components:
         - object
       title: DeletedSubscriber
       type: object
-    schedule:
-      description: Schedules describe the specific calendars available to your customers. Schedules are populated with `Events`.
+    calendar:
+      description: Calendars describe the specific calendars available to your customers. Calendars are populated with `Events`.
       properties:
         active:
-          description: Whether the schedule is currently available for use.
+          description: Whether the calendar is currently available for use.
           type: boolean
         created:
           description: 'Time at which the object was created, in ISO 8601 format.'
           format: date-time
           type: string
         description:
-          description: 'The schedule''s description, meant to be displayable to the customer. Use this field to optionally store a long form explanation of the schedule for your own rendering purposes.'
+          description: 'The calendar''s description, meant to be displayable to the customer. Use this field to optionally store a long form explanation of the calendar for your own rendering purposes.'
           maxLength: 5000
           nullable: true
           type: string
@@ -184,31 +186,31 @@ components:
           maxLength: 5000
           type: string
         image:
-          description: 'An URL of an image for this schedule, meant to be displayable to the customer.'
+          description: 'An URL of an image for this calendar, meant to be displayable to the customer.'
           maxLength: 5000
           type: string
         name:
-          description: 'The schedule''s name, meant to be displayable to the customer.'
+          description: 'The calendar''s name, meant to be displayable to the customer.'
           maxLength: 5000
           type: string
         object:
           description: String representing the object's type. Objects of the same type share the same value.
           enum:
-            - schedule
+            - calendar
           type: string
         updated:
           description: 'Time at which the object was last updated, in ISO 8601 format.'
           format: date-time
           type: string
         url:
-          description: A URL of a publicly-accessible webpage for this schedule.
+          description: A URL of a publicly-accessible webpage for this calendar.
           maxLength: 2048
           nullable: true
           type: string
-      title: Schedule
+      title: Calendar
       type: object
     subscriber:
-      description: This is an object representing a person subscribed to a schedule.
+      description: This is an object representing a person subscribed to a calendar.
       properties:
         active:
           description: Whether the subscriber is currently available.
@@ -256,12 +258,12 @@ components:
       scheme: bearer
       type: http
 paths:
-  /v1/schedules:
+  /v1/calendars:
     get:
-      description: 'Returns a list of your schedules. The schedules are returned sorted by creation date, with the most recently created schedules appearing first.'
-      operationId: GetSchedules
+      description: 'Returns a list of your calendars. The calendars are returned sorted by creation date, with the most recently created calendars appearing first.'
+      operationId: GetCalendars
       parameters:
-        - description: 'Only return schedules that are active or inactive (e.g., pass `false` to list all inactive schedules).'
+        - description: 'Only return calendars that are active or inactive (e.g., pass `false` to list all inactive calendars).'
           in: query
           name: active
           required: false
@@ -283,7 +285,7 @@ paths:
             application/json:
               example:
                 object: list
-                url: /v1/schedules
+                url: /v1/calendars
                 data:
                   - id: CmrdZWG5MkGEn7K4gA1f9VGV2B
                     active: true
@@ -299,7 +301,7 @@ paths:
                   data:
                     description: Details about each object.
                     items:
-                      $ref: '#/components/schemas/schedule'
+                      $ref: '#/components/schemas/calendar'
                     type: array
                   object:
                     description: String representing the object's type. Objects of the same type share the same value. Always has the value `list`.
@@ -309,13 +311,13 @@ paths:
                   url:
                     description: The URL where this list can be accessed.
                     maxLength: 5000
-                    pattern: ^/v1/schedules
+                    pattern: ^/v1/calendars
                     type: string
                 required:
                   - data
                   - object
                   - url
-                title: ScheduleList
+                title: CalendarList
                 type: object
           description: Successful response.
         default:
@@ -325,10 +327,10 @@ paths:
                 $ref: '#/components/schemas/error'
           description: Error response.
       tags:
-        - Schedule
+        - Calendar
     post:
-      description: Creates a new schedule object.
-      operationId: PostSchedules
+      description: Creates a new calendar object.
+      operationId: PostCalendars
       requestBody:
         content:
           application/json:
@@ -342,21 +344,21 @@ paths:
               properties:
                 active:
                   default: true
-                  description: Whether the schedule is currently available. Defaults to `true`.
+                  description: Whether the calendar is currently available. Defaults to `true`.
                   type: boolean
                 description:
-                  description: 'The schedule''s description, meant to be displayable to the customer. Use this field to optionally store a long form explanation of the schedule for your own rendering purposes.'
+                  description: 'The calendar''s description, meant to be displayable to the customer. Use this field to optionally store a long form explanation of the calendar for your own rendering purposes.'
                   maxLength: 40000
                   type: string
                 image:
-                  description: 'An URL of an image for this schedule, meant to be displayable to the customer.'
+                  description: 'An URL of an image for this calendar, meant to be displayable to the customer.'
                   type: string
                 name:
-                  description: 'The schedule''s name, meant to be displayable to the customer.'
+                  description: 'The calendar''s name, meant to be displayable to the customer.'
                   maxLength: 5000
                   type: string
                 url:
-                  description: A URL of a publicly-accessible webpage for this schedule.
+                  description: A URL of a publicly-accessible webpage for this calendar.
                   maxLength: 2048
                   nullable: true
                   type: string
@@ -375,11 +377,11 @@ paths:
                 description: Netball is the biggest team sport in Australia
                 image: 'https://netball.com.au/public/2023-08/0p7a9429.jpg'
                 name: 2024 Australian Netball Championship
-                object: schedule
+                object: calendar
                 updated: '2023-08-24T14:15:22Z'
                 url: 'https://netball.com.au/anc/matchcentre'
               schema:
-                $ref: '#/components/schemas/schedule'
+                $ref: '#/components/schemas/calendar'
           description: Successful response.
         default:
           content:
@@ -388,14 +390,14 @@ paths:
                 $ref: '#/components/schemas/error'
           description: Error response.
       tags:
-        - Schedule
-  '/v1/schedules/{id}':
+        - Calendar
+  '/v1/calendars/{id}':
     delete:
-      description: Delete a schedule.
-      operationId: DeleteSchedulesId
+      description: Delete a calendar.
+      operationId: DeleteCalendarsId
       parameters:
         - in: path
-          description: The identifier of the schedule which will be deleted.
+          description: The identifier of the calendar which will be deleted.
           name: id
           required: true
           schema:
@@ -409,9 +411,9 @@ paths:
               example:
                 id: CmrdZWG5MkGEn7K4gA1f9VGV2B
                 deleted: true
-                object: schedule
+                object: calendar
               schema:
-                $ref: '#/components/schemas/deleted_schedule'
+                $ref: '#/components/schemas/deleted_calendar'
           description: Successful response.
         default:
           content:
@@ -420,13 +422,13 @@ paths:
                 $ref: '#/components/schemas/error'
           description: Error response.
       tags:
-        - Schedule
+        - Calendar
     get:
-      description: 'Retrieves the details of an existing schedule. Supply the unique schedule ID from either a schedule creation request or the schedule list, and Chron will return the corresponding schedule information.'
-      operationId: GetSchedulesId
+      description: 'Retrieves the details of an existing calendar. Supply the unique calendar ID from either a calendar creation request or the calendar list, and Chron will return the corresponding calendar information.'
+      operationId: GetCalendarsId
       parameters:
         - in: path
-          description: The identifier of the schedule which will be returned.
+          description: The identifier of the calendar which will be returned.
           name: id
           required: true
           schema:
@@ -444,11 +446,11 @@ paths:
                 description: Netball is the biggest team sport in Australia
                 image: 'https://netball.com.au/public/2023-08/0p7a9429.jpg'
                 name: 2024 Australian Netball Championship
-                object: schedule
+                object: calendar
                 updated: '2023-08-24T14:15:22Z'
                 url: 'https://netball.com.au/anc/matchcentre'
               schema:
-                $ref: '#/components/schemas/schedule'
+                $ref: '#/components/schemas/calendar'
           description: Successful response.
         default:
           content:
@@ -457,13 +459,13 @@ paths:
                 $ref: '#/components/schemas/error'
           description: Error response.
       tags:
-        - Schedule
+        - Calendar
     post:
-      description: Updates the specific schedule by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
-      operationId: PostSchedulesId
+      description: Updates the specific calendar by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+      operationId: PostCalendarsId
       parameters:
         - in: path
-          description: The identifier of the schedule which will be updated.
+          description: The identifier of the calendar which will be updated.
           name: id
           required: true
           schema:
@@ -482,21 +484,21 @@ paths:
               additionalProperties: false
               properties:
                 active:
-                  description: Whether the schedule is currently available.
+                  description: Whether the calendar is currently available.
                   type: boolean
                 description:
-                  description: 'The schedule''s description, meant to be displayable to the customer. Use this field to optionally store a long form explanation of the schedule for your own rendering purposes.'
+                  description: 'The calendar''s description, meant to be displayable to the customer. Use this field to optionally store a long form explanation of the calendar for your own rendering purposes.'
                   maxLength: 40000
                   type: string
                 image:
-                  description: 'An URL of an image for this schedule, meant to be displayable to the customer.'
+                  description: 'An URL of an image for this calendar, meant to be displayable to the customer.'
                   type: string
                 name:
-                  description: 'The schedule''s name, meant to be displayable to the customer.'
+                  description: 'The calendar''s name, meant to be displayable to the customer.'
                   maxLength: 5000
                   type: string
                 url:
-                  description: A URL of a publicly-accessible webpage for this schedule.
+                  description: A URL of a publicly-accessible webpage for this calendar.
                   maxLength: 2048
                   type: string
               type: object
@@ -512,11 +514,11 @@ paths:
                 description: Netball is the biggest team sport in Australia
                 image: 'https://netball.com.au/public/2023-08/0p7a9429.jpg'
                 name: 2024 Australian Netball Championship
-                object: schedule
+                object: calendar
                 updated: '2023-08-24T14:15:22Z'
                 url: 'https://netball.com.au/anc/matchcentre'
               schema:
-                $ref: '#/components/schemas/schedule'
+                $ref: '#/components/schemas/calendar'
           description: Successful response.
         default:
           content:
@@ -525,14 +527,14 @@ paths:
                 $ref: '#/components/schemas/error'
           description: Error response.
       tags:
-        - Schedule
-  '/v1/schedules/{id}/subscribers':
+        - Calendar
+  '/v1/calendars/{id}/subscribers':
     get:
-      description: 'Returns a list of a schedule''s subscribers. The subscribers are returned sorted by created date, with the most recently created subscribers appearing first.'
-      operationId: GetSchedulesSubscribers
+      description: 'Returns a list of a calendar''s subscribers. The subscribers are returned sorted by created date, with the most recently created subscribers appearing first.'
+      operationId: GetCalendarsSubscribers
       parameters:
         - in: path
-          description: The identifier of the schedule.
+          description: The identifier of the calendar.
           name: id
           required: true
           schema:
@@ -561,7 +563,7 @@ paths:
             application/json:
               example:
                 object: list
-                url: /v1/schedules/aa3kD9wsUB5LtLlpOLMzWKpvtd/subscribers
+                url: /v1/calendars/aa3kD9wsUB5LtLlpOLMzWKpvtd/subscribers
                 data:
                   - id: fI7AqBtWI4H44p9GlJ5uz0R0Xe
                     active: true
@@ -588,7 +590,7 @@ paths:
                   - data
                   - object
                   - url
-                title: ScheduleSubscriberList
+                title: CalendarSubscriberList
                 type: object
           description: Successful response.
         default:
@@ -598,7 +600,7 @@ paths:
                 $ref: '#/components/schemas/error'
           description: Error response.
       tags:
-        - Schedule
+        - Calendar
   /v1/events:
     get:
       description: 'Returns a list of your events. The events are returned sorted by creation date, with the most recently created events appearing first.'
@@ -636,7 +638,7 @@ paths:
                     location: 'Blundstone Arena\n15 Derwent St\, Bellerive TAS 7018\, Australia'
                     name: Tasmania Wild vs Victorian Fury
                     object: event
-                    schedule: 26tbz5q3syTZK2zDBGwboz7AiA
+                    calendar: 26tbz5q3syTZK2zDBGwboz7AiA
                     start: '2023-10-31T15:00:00'
                     updated: '2023-08-24T14:15:22Z'
                     url: 'https://netball.com.au/anc/matchcentre/tas-wild-vic-fury'
@@ -683,7 +685,7 @@ paths:
               name: Tasmania Wild vs Victorian Fury
               description: Can the Wild tame the Victorians at home?
               location: 'Blundstone Arena\n15 Derwent St\, Bellerive TAS 7018\, Australia'
-              schedule: 26tbz5q3syTZK2zDBGwboz7AiA
+              calendar: 26tbz5q3syTZK2zDBGwboz7AiA
               start: '2023-10-31T15:00:00'
               url: 'https://netball.com.au/anc/matchcentre/tas-wild-vic-fury'
             schema:
@@ -713,10 +715,10 @@ paths:
                   description: 'The start date and time of the event, in ISO 8601 format.'
                   format: date-time
                   type: string
-                schedule:
+                calendar:
                   anyOf:
-                    - $ref: '#/components/schemas/schedule/properties/id'
-                  description: The ID of the schedule this event is associated with.
+                    - $ref: '#/components/schemas/calendar/properties/id'
+                  description: The ID of the calendar this event is associated with.
                 url:
                   description: A URL of a publicly-accessible webpage for this event.
                   maxLength: 2048
@@ -724,7 +726,7 @@ paths:
                   type: string
               required:
                 - name
-                - schedule
+                - calendar
                 - start
               type: object
         required: true
@@ -741,7 +743,7 @@ paths:
                 location: 'Blundstone Arena\n15 Derwent St\, Bellerive TAS 7018\, Australia'
                 name: Tasmania Wild vs Victorian Fury
                 object: event
-                schedule: 26tbz5q3syTZK2zDBGwboz7AiA
+                calendar: 26tbz5q3syTZK2zDBGwboz7AiA
                 start: '2023-10-31T15:00:00'
                 updated: '2023-08-24T14:15:22Z'
                 url: 'https://netball.com.au/anc/matchcentre/tas-wild-vic-fury'
@@ -813,7 +815,7 @@ paths:
                 location: 'Blundstone Arena\\n15 Derwent St\\, Bellerive TAS 7018\\, Australia'
                 name: Tasmania Wild vs Victorian Fury
                 object: event
-                schedule: 26tbz5q3syTZK2zDBGwboz7AiA
+                calendar: 26tbz5q3syTZK2zDBGwboz7AiA
                 start: '2023-10-31T15:00:00'
                 updated: '2023-08-24T14:15:22Z'
                 url: 'https://netball.com.au/anc/matchcentre/tas-wild-vic-fury'
@@ -847,7 +849,7 @@ paths:
               name: Tasmania Wild vs Victorian Fury
               description: Can the Wild tame the Victorians at home?
               location: 'Blundstone Arena\n15 Derwent St\, Bellerive TAS 7018\, Australia'
-              schedule: 26tbz5q3syTZK2zDBGwboz7AiA
+              calendar: 26tbz5q3syTZK2zDBGwboz7AiA
               start: '2023-10-31T15:00:00'
               url: 'https://netball.com.au/anc/matchcentre/tas-wild-vic-fury'
             schema:
@@ -876,10 +878,10 @@ paths:
                   description: 'The start date and time of the event, in ISO 8601 format.'
                   format: date-time
                   type: string
-                schedule:
+                calendar:
                   anyOf:
-                    - $ref: '#/components/schemas/schedule/properties/id'
-                  description: The ID of the schedule this event is associated with.
+                    - $ref: '#/components/schemas/calendar/properties/id'
+                  description: The ID of the calendar this event is associated with.
                 url:
                   description: A URL of a publicly-accessible webpage for this event.
                   maxLength: 2048
@@ -902,7 +904,7 @@ paths:
                 location: 'Blundstone Arena\\n15 Derwent St\\, Bellerive TAS 7018\\, Australia'
                 name: Tasmania Wild vs Victorian Fury
                 object: event
-                schedule: 26tbz5q3syTZK2zDBGwboz7AiA
+                calendar: 26tbz5q3syTZK2zDBGwboz7AiA
                 start: '2023-10-31T15:00:00'
                 updated: '2023-08-24T14:15:22Z'
                 url: 'https://netball.com.au/anc/matchcentre/tas-wild-vic-fury'

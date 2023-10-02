@@ -13,11 +13,6 @@
       "measurementId": "G-C1196JXMR8"
     }
   },
-  "logo": {
-    "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg",
-    "href": "https://chronhq.com"
-  },
   "favicon": "/favicon.png",
   "colors": {
     "primary": "#9563FF",
@@ -84,15 +79,15 @@
       "pages": ["api-reference/overview", "api-reference/authentication"]
     },
     {
-      "group": "Schedules",
+      "group": "Calendars",
       "pages": [
-        "api-reference/schedules/schedules",
-        "api-reference/schedules/list-schedules",
-        "api-reference/schedules/create-schedule",
-        "api-reference/schedules/delete-schedule",
-        "api-reference/schedules/get-schedule",
-        "api-reference/schedules/update-schedule",
-        "api-reference/schedules/get-schedule-subscribers"
+        "api-reference/calendars/calendars",
+        "api-reference/calendars/list-calendars",
+        "api-reference/calendars/create-calendar",
+        "api-reference/calendars/delete-calendar",
+        "api-reference/calendars/get-calendar",
+        "api-reference/calendars/update-calendar",
+        "api-reference/calendars/get-calendar-subscribers"
       ]
     },
     {
