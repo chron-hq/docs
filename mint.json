@@ -34,7 +34,7 @@
   ],
   "topbarCtaButton": {
     "name": "Dashboard",
-    "url": "https://dashboard.chronhq.com"
+    "url": "https://chronhq.com/profile"
   },
   "tabs": [
     {
@@ -46,7 +46,7 @@
     {
       "name": "Documentation",
       "icon": "book-open-cover",
-      "url": "https://docs.chronhq.com"
+      "url": "introduction"
     },
     {
       "name": "API Reference",

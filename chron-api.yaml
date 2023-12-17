@@ -248,10 +248,6 @@ components:
       title: Subscriber
       type: object
   securitySchemes:
-    basicAuth:
-      description: 'Basic HTTP authentication. Allowed headers-- Authorization: Basic <api_key> | Authorization: Basic <base64 hash of `api_key:`>'
-      scheme: basic
-      type: http
     bearerAuth:
       bearerFormat: auth-scheme
       description: 'Bearer HTTP authentication. Allowed headers-- Authorization: Bearer <api_key>'
@@ -1174,3 +1170,5 @@ paths:
           description: Error response.
       tags:
         - Subscriber
+security:
+  - bearerAuth: []

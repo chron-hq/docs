@@ -3,12 +3,10 @@ title: Authentication
 description: Connecting to your account
 ---
 
-The Chron API uses API keys to authenticate requests. You can view and manage your API keys in the Chron Dashboard.
+The Chron API uses Bearer Authentication to authenticate requests. You can view and manage your Access Token in the Chron Dashboard.
 
-Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret API keys in publicly accessible areas such as GitHub, client-side code, and so forth.
+Your Access Token carries many privileges, so be sure to keep it secure! The Access Token acts as a digital key, granting authorized users access to the API resources while ensuring data security. Do not share your secret Access Token in publicly accessible areas such as GitHub, client-side code, and so forth.
 
-Authentication to the API is performed via [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication). Provide your API key as the basic auth username value. You do not need to provide a password.
-
-If you need to authenticate via bearer auth (e.g., for a cross-origin request), use `-H "Authorization: Bearer sk_test_your_key"` instead of `-u sk_test_your_key`.
+Provide your Access Token via Bearer Auth (e.g., for a cross-origin request), use `-H "Authorization: Bearer your_access_token"`.
 
 All API requests must be made over [HTTPS](https://en.wikipedia.org/wiki/HTTPS). Calls made over plain HTTP will fail. API requests without authentication will also fail.
