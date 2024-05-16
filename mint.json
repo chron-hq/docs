@@ -38,31 +38,18 @@
   },
   "tabs": [
     {
-      "name": "API Reference",
-      "url": "api-reference"
-    }
-  ],
-  "anchors": [
-    {
-      "name": "Documentation",
-      "icon": "book-open-cover",
-      "url": "introduction"
+      "name": "Components",
+      "url": "components"
     },
     {
       "name": "API Reference",
-      "icon": "square-terminal",
       "url": "api-reference"
-    },
-    {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://chronhq.com/blog"
     }
   ],
   "navigation": [
     {
       "group": "Getting Started",
-      "pages": ["introduction", "quickstart", "development"]
+      "pages": ["quickstart", "development"]
     },
     {
       "group": "Essentials",
@@ -75,7 +62,15 @@
       ]
     },
     {
-      "group": "API Documentation",
+      "group": "Components",
+      "pages": [
+        "components/overview",
+        "components/button",
+        "components/modal"
+      ]
+    },
+    {
+      "group": "API Referemce",
       "pages": ["api-reference/overview", "api-reference/authentication"]
     },
     {
