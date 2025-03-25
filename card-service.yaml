@@ -1,0 +1,648 @@
+openapi: 3.0.3
+info:
+  title: Digital Gift Card Issuing API
+  version: 1.0.0
+  description: |
+    API for issuing and managing digital gift cards.
+servers:
+  - url: "https://api.chron.com"
+security:
+  - bearerAuth: []
+paths:
+  /cards:
+    post:
+      summary: Create a Card
+      description: |
+        Creates a new digital gift card and loads the initial funds. A unique `clientReference` must be provided to prevent duplicate card creation. If the same clientReference is submitted, a 409 Conflict error is returned.
+      operationId: createCard
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCardRequest"
+      responses:
+        "200":
+          description: Card created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Card"
+        "400":
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Duplicate clientReference. A card with the given clientReference already exists.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    get:
+      summary: Get a Paginated List of Cards
+      description: |
+        Retrieves a paginated list of digital gift cards with optional filtering on status, createdDate, expiryDate, activationDate, updatedDate, and metadata. The metadata filtering supports flat JSON objects (top-level keys only).
+      operationId: listCards
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            maximum: 100
+          description: Maximum number of cards per page.
+          required: true
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: Starting index for pagination.
+          required: true
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum:
+              - WAITING_ACTIVATION
+              - ACTIVE
+              - CANCELLED
+              - BLOCKED
+              - REISSUED
+              - EXPIRED
+          description: Filter cards by status.
+        - in: query
+          name: createdDate
+          schema:
+            type: string
+            format: date
+          description: Filter cards by creation date (YYYY-MM-DD).
+        - in: query
+          name: expiryDate
+          schema:
+            type: string
+            format: date
+          description: Filter cards by expiry date (YYYY-MM-DD).
+        - in: query
+          name: activationDate
+          schema:
+            type: string
+            format: date
+          description: Filter cards by activation date (YYYY-MM-DD).
+        - in: query
+          name: updatedDate
+          schema:
+            type: string
+            format: date
+          description: Filter cards by last updated date (YYYY-MM-DD).
+        - in: query
+          name: metadata
+          schema:
+            type: string
+          description: "Filter on metadata key-value pairs (flat JSON only), e.g., metadata.orderId=12345."
+      responses:
+        "200":
+          description: List of cards retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    description: Total number of cards matching the filter.
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+                  cards:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Card"
+        "400":
+          description: Invalid request parameters.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  "/cards/{cardId}":
+    get:
+      summary: Get an Existing Card
+      description: Retrieves the full details of a digital gift card by its unique identifier.
+      operationId: getCard
+      parameters:
+        - $ref: "#/components/parameters/CardIdParam"
+      responses:
+        "200":
+          description: Card retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Card"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Card not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  "/cards/{cardId}/activate":
+    post:
+      summary: Activate a Card
+      description: |
+        Activates a digital gift card that is currently in the WAITING_ACTIVATION state, transitioning it to ACTIVE.
+      operationId: activateCard
+      parameters:
+        - $ref: "#/components/parameters/CardIdParam"
+      responses:
+        "200":
+          description: Card activated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Card"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Card not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Card is not in a state that allows activation.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  "/cards/{cardId}/cancel":
+    post:
+      summary: Cancel a Card
+      description: "Cancels a digital gift card, marking it as CANCELLED, unloading remaining funds, and recording cancellation details."
+      operationId: cancelCard
+      parameters:
+        - $ref: "#/components/parameters/CardIdParam"
+      responses:
+        "200":
+          description: Card cancelled successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Card"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Card not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Card is not in a state that permits cancellation.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  "/cards/{cardId}/block":
+    post:
+      summary: Block a Card
+      description: |
+        Blocks a digital gift card (setting status to BLOCKED). This operation is allowed only if the card is in ACTIVE or WAITING_ACTIVATION state.
+      operationId: blockCard
+      parameters:
+        - $ref: "#/components/parameters/CardIdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlockCardRequest"
+      responses:
+        "200":
+          description: Card blocked successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Card"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Card not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Card is not in a state that permits blocking.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  "/cards/{cardId}/unblock":
+    post:
+      summary: Unblock a Card
+      description: |
+        Unblocks a digital gift card, transitioning it from BLOCKED to ACTIVE. This is only applicable if the card is currently BLOCKED.
+      operationId: unblockCard
+      parameters:
+        - $ref: "#/components/parameters/CardIdParam"
+      responses:
+        "200":
+          description: Card unblocked successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Card"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Card not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Card is not currently blocked.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  "/cards/{cardId}/provision/google":
+    post:
+      summary: Provision Card to Google
+      description: |
+        Provisions a card for Google Pay by passing required client device and wallet parameters.
+      operationId: provisionGoogle
+      parameters:
+        - $ref: "#/components/parameters/CardIdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProvisionToGoogleRequest"
+      responses:
+        "200":
+          description: Card provisioned to Google successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProvisionToGoogleResponse"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Card not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Invalid request payload or card state for provisioning.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  "/cards/{cardId}/provision/apple":
+    post:
+      summary: Provision Card to Apple
+      description: |
+        Provisions a card for Apple Wallet by passing required client device and wallet parameters.
+      operationId: provisionApple
+      parameters:
+        - $ref: "#/components/parameters/CardIdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProvisionToAppleRequest"
+      responses:
+        "200":
+          description: Card provisioned to Apple successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProvisionToAppleResponse"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Card not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Invalid request payload or card state for provisioning.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  "/cards/{cardId}/reissue":
+    post:
+      summary: Reissue or Replace a Card
+      description: |
+        Generates a new digital gift card to replace an existing one. Unloads funds from the original and adds them to the newly created card.
+      operationId: reissueCard
+      parameters:
+        - $ref: "#/components/parameters/CardIdParam"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReissueCardRequest"
+      responses:
+        "200":
+          description: Card reissued successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Card"
+        "401":
+          description: Unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Card not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Card is not in a state that permits reissuance.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    CardIdParam:
+      name: cardId
+      in: path
+      required: true
+      description: Unique identifier for the card.
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    Card:
+      type: object
+      properties:
+        cardId:
+          type: string
+          format: uuid
+          description: Unique identifier for the card.
+        clientReference:
+          type: string
+          description: Unique identifier provided by the client to prevent duplication.
+        status:
+          type: string
+          description: Current status of the card.
+          enum:
+            - WAITING_ACTIVATION
+            - ACTIVE
+            - CANCELLED
+            - BLOCKED
+            - REISSUED
+            - EXPIRED
+        initialBalance:
+          type: number
+          description: The starting balance on the card.
+        currentBalance:
+          type: number
+          description: The current available balance.
+        expiryDate:
+          type: string
+          format: date-time
+          description: The date and time when the card expires.
+        design:
+          type: string
+          description: The design or template selected for the card.
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Updateable custom data associated with the card.
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the card was created.
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the card was last updated.
+        activatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the card was activated (if applicable).
+        cancelledAt:
+          type: string
+          format: date-time
+          description: Timestamp when the card was cancelled (null if not cancelled).
+        cancellationAmount:
+          type: number
+          description: The amount that was unloaded from the card at cancellation (null if not cancelled).
+        cancellationAction:
+          type: string
+          description: Action that led to the card's cancellation.
+          enum:
+            - EXPIRY
+            - CANCELLATION
+            - REISSUE
+        transactions:
+          type: array
+          description: A list of transactions associated with the card.
+          items:
+            $ref: "#/components/schemas/Transaction"
+      required:
+        - cardId
+        - clientReference
+        - status
+        - initialBalance
+        - expiryDate
+        - design
+        - metadata
+        - createdAt
+        - updatedAt
+    Transaction:
+      type: object
+      properties:
+        transactionId:
+          type: string
+          description: Unique identifier for the transaction.
+        amount:
+          type: number
+          description: The amount for the transaction.
+        type:
+          type: string
+          description: Type of transaction.
+          enum:
+            - LOAD
+            - UNLOAD
+            - PURCHASE
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the transaction was recorded.
+      required:
+        - transactionId
+        - amount
+        - type
+        - createdAt
+    CreateCardRequest:
+      type: object
+      properties:
+        clientReference:
+          type: string
+          description: A unique identifier provided by the client to prevent duplicate card creation.
+        initialBalance:
+          type: number
+          description: "The starting balance (e.g., up to AUD 500 or AUD 1000)."
+        expiryDate:
+          type: string
+          format: date-time
+          description: The expiry date/time for the card.
+        design:
+          type: string
+          description: The design or template chosen for the card.
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Updateable custom data for the card.
+      required:
+        - clientReference
+        - initialBalance
+        - expiryDate
+        - design
+        - metadata
+    BlockCardRequest:
+      type: object
+      properties:
+        reason:
+          type: string
+          description: Optional reason for blocking the card.
+    ReissueCardRequest:
+      type: object
+      properties:
+        reason:
+          type: string
+          description: Optional reason for reissuing the card.
+    ProvisionToGoogleRequest:
+      type: object
+      properties:
+        clientDeviceID:
+          type: string
+          description: The identifier for the client device.
+        clientWalletProvider:
+          type: string
+          description: The wallet provider code.
+        clientWalletAccountID:
+          type: string
+          description: The wallet account identifier.
+      required:
+        - clientDeviceID
+        - clientWalletProvider
+        - clientWalletAccountID
+    ProvisionToGoogleResponse:
+      type: object
+      properties:
+        encryptedPaymentInstrument:
+          type: string
+          description: The encrypted payment instrument data returned by Google.
+      required:
+        - encryptedPaymentInstrument
+    ProvisionToAppleRequest:
+      type: object
+      properties:
+        clientDeviceID:
+          type: string
+          description: The identifier for the client device.
+        clientWalletProvider:
+          type: string
+          description: The wallet provider code.
+        clientWalletAccountID:
+          type: string
+          description: The wallet account identifier.
+      required:
+        - clientDeviceID
+        - clientWalletProvider
+        - clientWalletAccountID
+    ProvisionToAppleResponse:
+      type: object
+      properties:
+        primaryAccountNumberPrefix:
+          type: string
+          description: The prefix of the primary account number.
+        activationData:
+          type: string
+          description: The activation data provided by Apple.
+        authenticationData:
+          type: string
+          description: The authentication data provided by Apple.
+      required:
+        - primaryAccountNumberPrefix
+        - activationData
+        - authenticationData
+    ErrorResponse:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: A machine-readable error code.
+        message:
+          type: string
+          description: A human-readable error message.
+        details:
+          type: object
+          additionalProperties: true
+          description: Additional details about the error.
+      required:
+        - errorCode
+        - message

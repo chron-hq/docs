@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/schema.json",
   "name": "Chron",
-  "openapi": "./chron-api.yaml",
+  "openapi": "./card-service.yaml",
   "api": {
     "baseUrl": "https://api.chronhq.com",
     "auth": {
@@ -63,11 +63,7 @@
     },
     {
       "group": "Components",
-      "pages": [
-        "components/overview",
-        "components/button",
-        "components/modal"
-      ]
+      "pages": ["components/overview", "components/button", "components/modal"]
     },
     {
       "group": "API Referemce",
