@@ -70,37 +70,19 @@
       "pages": ["api-reference/overview", "api-reference/authentication"]
     },
     {
-      "group": "Calendars",
+      "group": "Cards",
       "pages": [
-        "api-reference/calendars/calendars",
-        "api-reference/calendars/list-calendars",
-        "api-reference/calendars/create-calendar",
-        "api-reference/calendars/delete-calendar",
-        "api-reference/calendars/get-calendar",
-        "api-reference/calendars/update-calendar",
-        "api-reference/calendars/get-calendar-subscribers"
-      ]
-    },
-    {
-      "group": "Events",
-      "pages": [
-        "api-reference/events/events",
-        "api-reference/events/list-events",
-        "api-reference/events/create-event",
-        "api-reference/events/delete-event",
-        "api-reference/events/get-event",
-        "api-reference/events/update-event"
-      ]
-    },
-    {
-      "group": "Subscribers",
-      "pages": [
-        "api-reference/subscribers/subscribers",
-        "api-reference/subscribers/list-subscribers",
-        "api-reference/subscribers/create-subscriber",
-        "api-reference/subscribers/delete-subscriber",
-        "api-reference/subscribers/get-subscriber",
-        "api-reference/subscribers/update-subscriber"
+        "api-reference/cards/cards",
+        "api-reference/cards/list-cards",
+        "api-reference/cards/get-card",
+        "api-reference/cards/create-card",
+        "api-reference/cards/activate-card",
+        "api-reference/cards/cancel-card",
+        "api-reference/cards/block-card",
+        "api-reference/cards/unblock-card",
+        "api-reference/cards/provision-apple",
+        "api-reference/cards/provision-google",
+        "api-reference/cards/reissue-card"
       ]
     }
   ],
