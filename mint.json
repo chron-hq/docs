@@ -34,7 +34,7 @@
   ],
   "topbarCtaButton": {
     "name": "Dashboard",
-    "url": "https://chronhq.com/profile"
+    "url": "https://app.chronhq.com/overview"
   },
   "tabs": [
     {
@@ -84,6 +84,10 @@
         "api-reference/cards/provision-google",
         "api-reference/cards/reissue-card"
       ]
+    },
+    {
+      "group": "Transactions",
+      "pages": ["api-reference/transactions/transactions"]
     }
   ],
   "footerSocials": {
